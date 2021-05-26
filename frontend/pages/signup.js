@@ -3,9 +3,11 @@ import SignupComponent from "../components/auth/SignupComponent";
 
 const Signup = () => {
   return (
-    <>
-      <SignupComponent />
-    </>
+    <div className="row">
+      <div className="col-md-6 offset-md-3">
+        <SignupComponent />
+      </div>
+    </div>
   );
 };
 
