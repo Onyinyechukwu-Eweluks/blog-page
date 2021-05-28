@@ -1,6 +1,6 @@
 import Router from "next/router";
-import { useState } from "react";
-import { signin } from "../../actions/auth";
+import { useState, useEffect } from "react";
+import { signin, authenticate, isAuth } from "../../actions/auth";
 
 const SigninComponent = () => {
   const [state, setState] = useState({
@@ -10,6 +10,12 @@ const SigninComponent = () => {
     loading: false,
     message: "",
   });
+
+  useEffect(() => {
+    if (isAuth()) {
+      return Router.push("/");
+    }
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -29,18 +35,12 @@ const SigninComponent = () => {
       if (data.error) {
         setState({ ...state, error: data.error, loading: false });
       } else {
-        // setState({
-        //   email: "",
-        //   password: "",
-        //   error: "",
-        //   loading: false,
-        //   message: data.message,
-        // });
-
         //save user token to cookie
         // save user info to localstorage
         //authenticate user
-        Router.push(`/`);
+        authenticate(data, () => {
+          Router.push(`/`);
+        });
       }
     });
   };
@@ -90,7 +90,7 @@ const SigninComponent = () => {
   };
 
   return (
-    <div class="container">
+    <div className="container">
       {showLoading()}
       {showError()}
       {showMessage()}
